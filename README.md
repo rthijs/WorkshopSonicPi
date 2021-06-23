@@ -1,4 +1,4 @@
-# WorkshopSonicPi
+# Workshop Sonic Pi
 
 Write programs to compose music.
 

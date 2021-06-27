@@ -73,6 +73,11 @@ play 60
 play 63
 play 67
 ```
+
+or even shorter:
+```ruby
+play [60, 63, 67]
+```
 ## Sleep
 
 The next import command is `sleep`, it tells Sonic Pi to wait before continuing the program.
@@ -179,6 +184,32 @@ For samples there are a lot but make sure to try out these ones:
 - `hpf:` high pass filter
 - `rate:` 1 is normal speed, -1 is backwards, 2 is twice the speed
 - `beat_stretch:` stretches the sample to fit a number of beats
+
+# Effects
+Sonic Pi is loaded with effects. Take a look at the *Fx* tab in the help section. You use them by containing your code in a `with_fx` block.
+
+For the old skool 8-bit game effect use `:bitcrusher`
+
+```ruby
+use_bpm 200
+with_fx :bitcrusher do
+  play [:d3, :fs4, :e5]
+  sleep 0.5
+  play [:d3, :fs4, :e5]
+  sleep 1
+  play [:d3, :fs4, :e5]
+  sleep 1
+  play [:d3, :fs4, :c5]
+  sleep 0.5
+  play [:d3, :fs4, :e5]
+  sleep 1
+  play [:g4, :b4, :g5]
+  sleep 2
+  play [:g3, :g4]
+end
+```
+
+Use a bit of `:distortion` to simulate a crappy speaker. Effects can take parameters, look them up in the help section.
 
 There is much more to discover but first let's move on to something else.
 
@@ -302,6 +333,60 @@ loop do
 end
 
 ```
+
+## Rings
+Now we are talking variables let's see how we can group them together. We already saw an example with `play [60,64,72]` but there is more to learn.
+
+Rings are handy for music as it goes in cycles, which is used all the time in music. We saw how to use loops but take a look at this example:
+
+Create a ring with the ring keyword inside brackets: 
+```ruby
+(ring 60, 64, 67, 72, 58)
+```
+play all notes in the ring simultaneously: 
+```ruby
+play (ring 60, 64, 67, 72, 58)
+```
+You can step trough a ring, it goes on forever. Play the first element:
+```ruby
+play (ring 60, 64, 67, 72, 58)[0] #plays 60
+```
+There are 5 elements in this ring, the last one has index 4:
+```ruby
+play (ring 60, 64, 67, 72, 58)[4] #plays 58
+```
+But since a ring keeps going the next index is equal to the first again:
+```ruby
+play (ring 60, 64, 67, 72, 58)[5] #plays 60
+```
+### Tick
+Keep the ring going with `.tick`.
+```ruby
+loop do
+  play (ring 60, 64, 67, 72, 58).tick
+  sleep 0.25
+end
+```
+The ring remembers where you were, every time `tick` is called it goes to the next element.
+
+### Choose
+`.choose` will pick a random element from the ring.
+```ruby
+loop do
+  play (ring 60, 64, 67, 72, 58).choose
+  sleep 0.25
+end
+```
+
+## Lists
+Similar to rings are lists. They don't loop over but they come in handy in other situations:
+```ruby
+loop do
+  play (ring 60, 64, 67, 72, 58).tick, amp: [0.5, 1].choose
+  sleep 0.25
+end
+```
+Note that you don't use `pick` but `choose` to get a random element from a list.
 
 # More Loops
 ## Multiple loops at the same time

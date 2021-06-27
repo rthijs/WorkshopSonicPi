@@ -386,7 +386,38 @@ loop do
   sleep 0.25
 end
 ```
-Note that you don't use `pick` but `choose` to get a random element from a list.
+
+## Scales
+You can make your own scale by putting the notes in a ring but Sonic Pi has a lot build in. Use `scale` in stead of ring.
+
+```ruby
+loop do
+  play (scale :e2, :major_pentatonic, num_octaves: 4).tick
+  sleep 0.25
+end
+```
+You can use `tick` for a ladder or `pick` for some random notes from the chosen scale and octaves.
+
+## Chords
+We saw some ways to play notes at the same time, if you know the chord you want it's easier to name it. Especially if you later read your code and wonder what the hell you were thinking at the time. 
+
+The keyword here is `chord` and you specify the root note and the chord type. Here is a C Major chord:
+
+```ruby
+play (chord :c4,:M)
+```
+Again there are lots of chord variants to choose from and you can use the same `tick`, `pick` and parameters with them.
+
+Make sure to try these:
+```ruby
+play_pattern (chord :c4,:M)
+```
+```ruby
+play_pattern_timed (chord :c4, :M), 0.25
+```
+```ruby
+play_pattern_timed (chord :c4, :M7), [0.25, 0.5]
+```
 
 # More Loops
 ## Multiple loops at the same time
@@ -413,4 +444,122 @@ loop do
   sleep 0.5
 end
 ```
-For running multiple things at the same time we need threads. Everybody will tell you threads are hard but Sonic Pi makes it easy.
+For running multiple things at the same time we need threads. Everybody will tell you threads are hard but Sonic Pi makes it easy. Wrap your loops in `in_thread` blocks.
+
+```ruby
+use_bpm 120
+
+in_thread do
+  loop do
+    sample :loop_amen, beat_stretch: 4
+    sleep 4
+  end
+end
+
+in_thread do
+  use_synth :chipbass
+  loop do
+    3.times do |i|
+      play 40 + i
+      sleep 1
+    end
+    play 41
+    sleep 0.5
+    play 40
+    sleep 0.5
+  end
+end
+```
+
+There is much of funky stuff possible with this, check out section 10 of the Sonic Pi Help.
+
+# Live Coding
+This is where Sonic Pi shines, code music live like an actual performer. Modify your code to get different sounds without ever stopping the music. The key to this is using `live_loop` and make sure every live loop has a name like `live_loop :bass do`
+
+```ruby
+use_bpm 120
+
+live_loop :beat do
+  sample :loop_breakbeat, beat_stretch: 4
+  sleep 4
+end
+
+live_loop :bass do
+  use_synth :sine
+  play (scale :e2 ,:aeolian, num_octaves: 1).pick, amp: 0.5
+  sleep 2
+end
+
+live_loop :melody do
+  with_fx :echo do
+    sample :guit_em9, rate: 0.25
+    sleep 8
+  end
+end
+```
+
+In some cases you want to make sure your loops line up without doing all the math:
+
+```ruby
+live_loop :beat do
+  8.times do
+    sample :bd_haus
+    sleep 0.5
+  end
+end
+
+live_loop :syncedSample do
+  sync :beat
+  sample :ambi_dark_woosh
+end
+```
+The magic word is `sync` and you don't need to sleep in that thread as it is only triggered by the loop named `:beat`.
+
+# MIDI and OSC
+If you have a midi controller attached to your machine you can hit some buttons and see events pop up in Sonic Pi.
+
+![midi events](.images/midievents.jpg)
+
+You can use these as cues for your code! There is a delay because Sonic Pi needs time to process things. If your pc is fast enough use `use_real_time`
+
+```ruby
+live_loop :midi_piano do
+  use_real_time
+  note, velocity = sync "/midi:launchkey_61_midi_1:1:1/note_on"
+  synth :piano, note: note, amp: velocity / 127.0
+end
+```
+
+If you have a drum pad or launchpad:
+
+```ruby
+live_loop :midi_triggers do
+  use_real_time
+  note, velocity = sync "/midi:*10/note_on"
+  sample :ambi_choir if note == 36
+  sample :ambi_drone if note == 37
+end
+```
+So note you can use wild cards `*` in the filter and conditionals `if note == 36` for playing.
+
+# Using Methods
+You can define methods, or functions with `define`. Functions are persistend across runs. So if you make a function and run the program you can still call the function if you remove it and rerun the program.
+
+```ruby
+define :foo do
+  play 50
+  sleep 1
+  play 55
+  sleep 0.5
+end
+
+foo
+
+sleep 1
+
+2.times do
+  foo
+end 
+```
+
+You can make functions take parameters but check that out in the Help section 5.5.

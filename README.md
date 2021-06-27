@@ -27,6 +27,13 @@ Experiment a bit with the example code and hear the music change.
 
 We don't have much time so let's take a step back and start with the basics.
 
+# Help
+Sonic Pi has a really great help section build in. It explains (almost) everything you can do with Sonic Pi and by just going through it will take you through all the basics of programming you'll need.
+
+![help section](.images/helpsection.jpg)
+
+Finding *Sam Aaron* on YouTube will get you a lot of extra information and the reasons why Sonic Pi is what it is and how it works behind the screens.
+
 # First Beeps
 
 The simplest thing you can do in Sonic Pi is

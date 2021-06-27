@@ -114,4 +114,211 @@ play 46
 ```
 
 # Samples
-For more sounds we can use samples. There are quite a lot build into Sonic Pi but you can use your own
+For more sounds we can use samples. There are quite a lot build into Sonic Pi but you can use your own too. Let's start with the build in ones. Use the command `sample` and a list will pop up. Pick one and `alt+r` to play it.
+
+```ruby
+sample :ambi_piano
+```
+
+Using your own sample:
+```ruby
+sample "/home/roel/Music/samples/Loops/DRUMS/drum_92BPM_01.wav"
+```
+Using sample packs it's best to put the folder in a variable and select a sample from there.
+
+```ruby
+drums = "/home/roel/Music/samples/Loops/DRUMS/"
+sample drums, 2
+```
+
+Usually sample packs have file names indicating their bpm or key:
+
+![list of samples](.images/samplelisting.jpg)
+
+So let's say our music is in 110 BPM, we can filter out those in Sonic Pi:
+
+```ruby
+drums = "/home/roel/Music/samples/Loops/DRUMS/"
+sample drums, "120", 5
+```
+
+# Envelopes
+Like a lot of synths Sonic Pi uses envelopes to shape the sound.
+
+Have a look at the Sonic Pi manual section 2.4 for all the details as some of them are a bit specific to Sonic Pi.
+
+![ADSR](.images/ADSR.jpg)
+
+Use it like this:
+```ruby
+play 60, attack: 0.1, attack_level: 1, decay: 0.2, decay_level: 0.3, sustain: 1, sustain_level: 0.4, release: 0.5
+```
+Of course you can leave out the ones you don't care about.
+
+Envelopes work on samples too:
+```ruby
+sample :ambi_dark_woosh, attack: 2, decay: 0, sustain: 0, decay: 2
+```
+
+# More parameters
+Sonic Pi provides an almost infinite amount of parameters to change your sound. Some of the most usefull are:
+
+ - `amp:` for amplification, defaults to 1 but you can go from 0 to wherever
+ - `pan:` 1 is full right, -1 is full left, 0 is the exact middle
+
+For samples there are a lot but make sure to try out these ones:
+
+- `lpf:` low pass filter
+- `hpf:` high pass filter
+- `rate:` 1 is normal speed, -1 is backwards, 2 is twice the speed
+- `beat_stretch:` stretches the sample to fit a number of beats
+
+There is much more to discover but first let's move on to something else.
+
+# Loops
+Programmers are lazy, and copy pasting code a few times is just too much work. Use loops.
+
+Take this masterpiece for example:
+
+```ruby
+use_bpm 120
+sample :loop_amen, beat_stretch: 4
+use_synth :chipbass
+play 40
+sleep 1
+play 40
+sleep 1
+play 40
+sleep 1
+play 40
+```
+
+## Infinite loops
+
+Wouldn't it be awesome if it went on forever? Copy pasting is hard work, especially since Sonic Pi makes you use the `Alt` key in stead of `Ctrl` like a normal person. 
+
+```ruby
+use_bpm 120
+use_synth :chipbass
+loop do
+  sample :loop_amen, beat_stretch: 4
+  play 40
+  sleep 1
+  play 40
+  sleep 1
+  play 40
+  sleep 1
+  play 40
+  sleep 1
+end
+```
+We can do even better, and make the beat a bit more interesting.
+
+```ruby
+use_bpm 120
+use_synth :chipbass
+loop do
+  sample :loop_amen, beat_stretch: 4
+  3.times do
+    play 40
+    sleep 1
+  end
+  play 41
+  sleep 0.5
+  play 40
+  sleep 0.5
+end
+```
+
+Loops have iterators, you don't need to type them by default but if you add them you can use them for more interesting effects.
+
+```ruby
+use_bpm 120
+use_synth :chipbass
+loop do
+  sample :loop_amen, beat_stretch: 4
+  3.times do |i| #i is the iterator and will count up from 0
+    play 40 + i
+    sleep 1
+  end
+  play 41
+  sleep 0.5
+  play 40
+  sleep 0.5
+end
+```
+
+# Something Random in between
+Use some randomness in your music to make it sound more interesting. `rrand` stands for *ranged random*, give it a range as parameter.
+
+```ruby
+loop do
+  play rrand(50, 80)
+  sleep 0.25
+end
+```
+If you only want integer values use `rrand_i`. 
+
+Because Sonic Pi wants your compositions to sound the same on any machine that executes your code *random* is not really random. Do a `play rrand(50,80)` and look at the log output.
+
+>{run: 104, time: 0.0}
+>
+> └─ synth :beep, {note: 72.5018}
+
+Look at your log, at your friend's log, it will be the same value.
+
+To vary the values you get you must *seed* the number generator with a value:
+
+```ruby
+use_random_seed 123
+loop do
+  play rrand(50, 80)
+  sleep 0.25
+end
+```
+
+Random numbers are not only for note values, they are for parameter values too.
+
+# Variables
+Sometimes you want to reuse a certain value. You can copy paste it everywhere but that's not just the programmer way. Waht if the value is random? Stick in a variable!
+
+```ruby
+myValue = rrand(0,1)
+```
+
+Now you can do things like this: (Note: don't do this.)
+```ruby
+loop do
+  duration = rrand(0.5,1.5)
+  sample :loop_amen, beat_stretch: duration
+  sleep duration
+end
+
+```
+
+# More Loops
+## Multiple loops at the same time
+If you write code in a loop without specifying the number of iterations you want, it will play forever, never getting to whatever you have coded below. 
+
+```ruby
+use_bpm 120
+
+loop do
+  sample :loop_amen, beat_stretch: 4
+  sleep 4 #sleep needed or the sample will play infinite times at once
+end
+
+#This code will never execute
+use_synth :chipbass
+loop do
+  3.times do |i| #i is the iterator and will count up from 0
+    play 40 + i
+    sleep 1
+  end
+  play 41
+  sleep 0.5
+  play 40
+  sleep 0.5
+end
+```
+For running multiple things at the same time we need threads. Everybody will tell you threads are hard but Sonic Pi makes it easy.

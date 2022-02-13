@@ -53,6 +53,7 @@ From the AUR package build:
    + rtmidi 
    + elixir
    + base-devel (maybe not needed)
+   + jack-example-tools
 
 ```shell
 yay -Syu boost cmake git erlang-nox gendesk lua qt5-tools wkhtmltopdf base-devel
@@ -60,7 +61,7 @@ yay -Syu boost cmake git erlang-nox gendesk lua qt5-tools wkhtmltopdf base-devel
 ```
 
 ```shell
-yay -Syu aubio gcc-libs glibc osmid qt5-base qscintilla-qt5 ruby ruby-activesupport ruby-bundler ruby-ffi ruby-i18n ruby-kramdown ruby-minitest ruby-mocha ruby-multi_json ruby-rake ruby-rouge ruby-rugged ruby-sys-proctable sc3-plugins sox supercollider rtmidi elixir
+yay -Syu aubio gcc-libs glibc osmid qt5-base qscintilla-qt5 ruby ruby-activesupport ruby-bundler ruby-ffi ruby-i18n ruby-kramdown ruby-minitest ruby-mocha ruby-multi_json ruby-rake ruby-rouge ruby-rugged ruby-sys-proctable sc3-plugins sox supercollider rtmidi elixir jack-example-tools
 ```
 
 ## Clone the Sonic Pi project

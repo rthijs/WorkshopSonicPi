@@ -21,8 +21,8 @@ From the AUR package build:
     + gcc-libs
     + glibc
     + osmid
-    + qt5-base
-    + qscintilla-qt5
+    + qt6-base
+    + qscintilla-qt6
     + ruby
     + ruby-activesupport
     + ruby-bundler
@@ -46,7 +46,7 @@ From the AUR package build:
    + erlang-nox
    + gendesk
    + lua
-   + qt5-tools
+   + qt6-tools
    + wkhtmltopdf
 
  - packages missing from dependencies above
@@ -56,12 +56,12 @@ From the AUR package build:
    + jack-example-tools
 
 ```shell
-yay -Syu boost cmake git erlang-nox gendesk lua qt5-tools wkhtmltopdf base-devel
+yay -Syu boost cmake git erlang-nox gendesk lua qt6-tools wkhtmltopdf base-devel
 
 ```
 
 ```shell
-yay -Syu aubio gcc-libs glibc osmid qt5-base qscintilla-qt5 ruby ruby-activesupport ruby-bundler ruby-ffi ruby-i18n ruby-kramdown ruby-minitest ruby-mocha ruby-multi_json ruby-rake ruby-rouge ruby-rugged ruby-sys-proctable sc3-plugins sox supercollider rtmidi elixir jack-example-tools
+yay -Syu aubio gcc-libs glibc osmid qt6-base qscintilla-qt6 ruby ruby-activesupport ruby-bundler ruby-ffi ruby-i18n ruby-kramdown ruby-minitest ruby-mocha ruby-multi_json ruby-rake ruby-rouge ruby-rugged ruby-sys-proctable sc3-plugins sox supercollider rtmidi elixir jack-example-tools
 ```
 
 ## Clone the Sonic Pi project

@@ -8,7 +8,7 @@ Here I'll talk you through compiling Sonic Pi yourself based on the instructions
 
 From the Linux installation instructions:
  - Build Tools (c++ compiler, cmake, git.)
- - Qt + Dev tools (5.15+)
+ - Qt + Dev tools (6+)
  - Jack (and pulse-audio-module-jack if you are running Raspberry Pi OS)
  - Ruby + Dev tools (2.5+)
  - Elixir + Dev tools (12.0+)
@@ -54,6 +54,7 @@ From the AUR package build:
    + elixir
    + base-devel (maybe not needed)
    + jack-example-tools
+   + qt6-svg
 
 ```shell
 yay -Syu boost cmake git erlang-nox gendesk lua qt6-tools wkhtmltopdf base-devel
@@ -61,7 +62,7 @@ yay -Syu boost cmake git erlang-nox gendesk lua qt6-tools wkhtmltopdf base-devel
 ```
 
 ```shell
-yay -Syu aubio gcc-libs glibc osmid qt6-base qscintilla-qt6 ruby ruby-activesupport ruby-bundler ruby-ffi ruby-i18n ruby-kramdown ruby-minitest ruby-mocha ruby-multi_json ruby-rake ruby-rouge ruby-rugged ruby-sys-proctable sc3-plugins sox supercollider rtmidi elixir jack-example-tools
+yay -Syu aubio gcc-libs glibc osmid qt6-base qscintilla-qt6 ruby ruby-activesupport ruby-bundler ruby-ffi ruby-i18n ruby-kramdown ruby-minitest ruby-mocha ruby-multi_json ruby-rake ruby-rouge ruby-rugged ruby-sys-proctable sc3-plugins sox supercollider rtmidi elixir jack-example-tools qt6-svg
 ```
 
 ## Clone the Sonic Pi project
